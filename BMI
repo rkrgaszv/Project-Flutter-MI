@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const BMICalculatorApp());
+}
+
+class BMICalculatorApp extends StatelessWidget {
+  const BMICalculatorApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: BMIScreen(),
+    );
+  }
+}
+
+class BMIScreen extends StatefulWidget {
+  const BMIScreen({super.key});
+
+  @override
+  State<BMIScreen> createState() => _BMIScreenState();
+}
+
+class _BMIScreenState extends State<BMIScreen> {
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  double _bmi = 0;
+
+  void calculateBMI() {
+    final height = double.tryParse(_heightController.text) ?? 0;
+    final weight = double.tryParse(_weightController.text) ?? 0;
+    if (height > 0 && weight > 0) {
+      setState(() {
+        _bmi = weight / ((height / 100) * (height / 100));
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('BMI Kalkulator')),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _heightController,
+              decoration: const InputDecoration(labelText: 'Tinggi (cm)'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _weightController,
+              decoration: const InputDecoration(labelText: 'Berat (kg)'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: calculateBMI,
+              child: const Text('Hitung BMI'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _bmi == 0 ? '' : 'BMI Anda: ${_bmi.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 24),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
